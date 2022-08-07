@@ -34,48 +34,58 @@ class _ExpensesState extends State<Expenses> {
             DataTable(
               columns: const [
                 DataColumn(
-                  label: Text('Name'),
+                  label: Text('Name',style: TextStyle(fontSize: 13)),
                 ),
                 DataColumn(
-                  label: Text('Age'),
+                  label: Text('Start',style: TextStyle(fontSize: 13)),
                 ),
                 DataColumn(
-                  label: Text('Gender'),
+                  label: Text('Type',style: TextStyle(fontSize: 13)),
                 ),
                 DataColumn(
-                  label: Text('Date'),
+                  label: Text('Amount',style: TextStyle(fontSize: 13)),
+                ),
+                DataColumn(
+                  label: Text('Status',style: TextStyle(fontSize: 13)),
                 )
               ],
               rows: const [
                 DataRow(
-                  cells: [
+
+                  cells:  [
                     DataCell(
-                      Text('John'),
+                      Text('John',style: TextStyle(fontSize: 13)),
                     ),
                     DataCell(
-                      Text('21'),
+                      Text('21-Mai-2021',style: TextStyle(fontSize: 13)),
                     ),
                     DataCell(
-                      Text('Male'),
+                      Text('Hotel fees',style: TextStyle(fontSize: 13)),
                     ),
                     DataCell(
-                      Text('12-02-2021'),
+                      Text('20USD',style: TextStyle(fontSize: 13)),
+                    ),
+                    DataCell(
+                      Text('Validated',style: TextStyle(fontSize: 13)),
                     ),
                   ],
                 ),
                 DataRow(
                   cells: [
                     DataCell(
-                      Text('John'),
+                      Text('John',style: TextStyle(fontSize: 13)),
                     ),
                     DataCell(
-                      Text('21'),
+                      Text('21-Mai-2021', style: TextStyle(fontSize: 13),),
                     ),
                     DataCell(
-                      Text('Male'),
+                      Text('Hotel fees',style: TextStyle(fontSize: 13)),
                     ),
                     DataCell(
-                      Text('12-02-2021'),
+                      Text('20USD',style: TextStyle(fontSize: 13)),
+                    ),
+                    DataCell(
+                      Text('Validated',style: TextStyle(fontSize: 13)),
                     ),
                   ],
                 ),

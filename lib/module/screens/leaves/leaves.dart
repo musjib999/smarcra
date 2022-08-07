@@ -37,45 +37,45 @@ class _LeavesState extends State<Leaves> {
                   label: Text('Name'),
                 ),
                 DataColumn(
-                  label: Text('Age'),
+                  label: Text('Start', style: TextStyle(fontSize: 13)),
                 ),
                 DataColumn(
-                  label: Text('Gender'),
+                  label: Text('End'),
                 ),
                 DataColumn(
-                  label: Text('Date'),
+                  label: Text('Status'),
                 )
               ],
               rows: const [
                 DataRow(
                   cells: [
                     DataCell(
-                      Text('John'),
+                      Text('MArc'),
                     ),
                     DataCell(
-                      Text('21'),
+                      Text('11-Mai-2020'),
                     ),
                     DataCell(
-                      Text('Male'),
+                      Text('30-Mai-2021'),
                     ),
                     DataCell(
-                      Text('12-02-2021'),
+                      Text('Validated'),
                     ),
                   ],
                 ),
                 DataRow(
                   cells: [
                     DataCell(
-                      Text('John'),
+                      Text('MArc'),
                     ),
                     DataCell(
-                      Text('21'),
+                      Text('11-Mai-2020'),
                     ),
                     DataCell(
-                      Text('Male'),
+                      Text('30-Mai-2021'),
                     ),
                     DataCell(
-                      Text('12-02-2021'),
+                      Text('Validated'),
                     ),
                   ],
                 ),
