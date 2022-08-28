@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sizer/sizer.dart';
-import 'package:smarcra/shared/global/global_var.dart';
+import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/shared/themes/colors.dart';
 import 'package:smarcra/shared/widgets/buttons/icon_button.dart';
 import 'package:smarcra/shared/widgets/buttons/primary_button.dart';
 import 'package:smarcra/shared/widgets/buttons/social_button.dart';
 import 'package:smarcra/shared/widgets/form/primary_text_field.dart';
-import 'package:smarcra/shared/widgets/home_bottom_nav.dart';
+
+import '../../shared/global/global_var.dart';
+import '../../shared/widgets/home_bottom_nav.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -110,20 +112,24 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PrimaryButton(
-                    title: 'Sign In',
-                    onTap: (startLoading, stopLoading, btnState) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) {
-                            return HomeBottomNavigation(
-                                pages: appBottomNavScreens);
-                          }),
-                        ),
-                      );
-                    },
-                    width: 68.w,
+                  Center(
+                    child: PrimaryButton(
+                      title: 'Sign In',
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        startLoading();
+                        final login = await si.authService.login(context);
+                        if (login == true) {
+                          stopLoading();
+                          si.routerService.popUntil(
+                            context: context,
+                            HomeBottomNavigation(pages: appBottomNavScreens),
+                          );
+                        } else {
+                          stopLoading();
+                        }
+                      },
+                      width: 67.w,
+                    ),
                   ),
                   const SizedBox(width: 8.0),
                   PrimaryIconButton(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/shared/themes/colors.dart';
 
-class ActionButtion extends StatelessWidget {
+class ActionButton extends StatelessWidget {
   final IconData icon;
   final String title;
-  const ActionButtion({Key? key, required this.title, required this.icon}) : super(key: key);
+  const ActionButton({Key? key, required this.title, required this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +27,12 @@ class ActionButtion extends StatelessWidget {
               ),
               shape: BoxShape.circle,
             ),
-              child: Icon(icon, color: Colors.white, size: 18,),
+              child: Icon(icon, color: Colors.white, size: 17,),
           ),
           SizedBox(width: 5.sp),
-          Text(title, style:
+          Text(
+            title,
+            style:
             TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.white,

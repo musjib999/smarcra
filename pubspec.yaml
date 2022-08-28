@@ -38,6 +38,13 @@ dependencies:
 
   argon_buttons_flutter: ^1.1.0
   sizer: ^2.0.15
+  google_fonts: ^3.0.1
+  dotted_border: ^2.0.0+2
+  adaptive_scrollbar: ^2.1.2
+  file_picker: ^5.0.1
+
+  http: ^0.13.5
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
