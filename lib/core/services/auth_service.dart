@@ -6,26 +6,27 @@ import 'package:smarcra/core/errors/request_error.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/data/api_data.dart';
 import 'package:smarcra/shared/global/configs.dart';
+import 'package:smarcra/shared/global/global_var.dart';
 import 'package:smarcra/shared/models/token_model.dart';
 import 'package:smarcra/shared/models/user_model.dart';
 
 class AuthService {
-  Future<TokenModel?> requestForToken(BuildContext context) async {
+  Future<TokenModel?> requestForToken(BuildContext context, {required String username, required String password}) async {
     TokenModel? token;
-    String username = 'smartcra-dev';
-    String password = 'smartcra-dev123@!';
+    String apiUsername = 'smartcra-dev';
+    String apiPassword = 'smartcra-dev123@!';
     final response = await apiData.postRequest(
       '$authUrl/oauth/token',
       context: context,
       body: {
-        'username': 'olil.personne@gmail.com',
-        'password': 'tesT123@!',
+        'username': username,
+        'password': password,
         'grant_type': 'password',
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'authorization':
-            'Basic ${base64.encode(utf8.encode('$username:$password'))}'
+            'Basic ${base64.encode(utf8.encode('$apiUsername:$apiPassword'))}'
       },
       encoding: Encoding.getByName('utf-8'),
     );
@@ -34,6 +35,7 @@ class AuthService {
         if (success!.code == 200) {
           token = TokenModel.fromJson(success.data);
         } else {
+          si.dialogService.successSnackBar(context, success.data['error_description'], true);
           token = TokenModel(
             accessToken: '',
             tokenType: '',
@@ -45,6 +47,7 @@ class AuthService {
         }
       },
       (error) {
+        si.dialogService.successSnackBar(context, error.error, true);
         token = TokenModel(
           accessToken: '',
           tokenType: '',
@@ -99,18 +102,20 @@ class AuthService {
     return Left(user);
   }
 
-  Future<bool> login(BuildContext context) async {
+  Future<bool> login(BuildContext context, {required String username, required String password}) async {
     bool isLoginSuccessful = false;
-    final token = await requestForToken(context);
-    if (token!.accessToken != '' &&
-        token.expiresIn != 0 &&
-        token.refreshToken != '') {
-      final response = await getUser(token: token.accessToken);
+    final requestedToken = await requestForToken(context, username: username, password: password );
+    if (requestedToken!.accessToken != '' &&
+        requestedToken.expiresIn != 0 &&
+        requestedToken.refreshToken != '') {
+      token = requestedToken;
+      final response = await getUser(token: requestedToken.accessToken);
       response.fold(
         (user) {
           if(user!.firstName == '' && user.email == '' && user.resourceId == 0){
             isLoginSuccessful = false;
           }else{
+            currentUser = user;
             isLoginSuccessful = true;
           }
         },

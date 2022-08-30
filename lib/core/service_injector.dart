@@ -4,6 +4,7 @@ class ServiceInjector{
   RouterService routerService = RouterService();
   DialogService dialogService = DialogService();
   AuthService authService = AuthService();
+  TimeSheetService timeSheetService = TimeSheetService();
 }
 
 ServiceInjector si = ServiceInjector();

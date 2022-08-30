@@ -8,27 +8,30 @@ class PrimaryTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool obsecureText;
   final IconData? prefixIcon;
-  final IconData? suffixIcon;
+  final IconButton? suffixIcon;
+ final String? Function(String?)? validator;
   const PrimaryTextField(
       {Key? key,
       required this.controller,
       required this.label,
       required this.hintText,
       this.obsecureText = false,
+        this.validator,
       this.prefixIcon,
       this.suffixIcon})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       obscureText: obsecureText,
-      controller: TextEditingController(),
+      controller: controller,
+      validator: validator,
       decoration: InputDecoration(
         prefixIcon: Icon(prefixIcon),
         hintText: hintText,
         hintStyle: const TextStyle(fontSize: 12),
-        suffixIcon: Icon(suffixIcon),
+        suffixIcon: suffixIcon,
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.greyText),
         ),

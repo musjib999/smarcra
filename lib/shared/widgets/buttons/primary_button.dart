@@ -22,6 +22,7 @@ class PrimaryButton extends StatelessWidget {
       width: width!,
       borderRadius: 8.0,
       color: color,
+      minWidth: 200,
       loader: Container(
         padding: const EdgeInsets.all(10),
         child: const CircularProgressIndicator(

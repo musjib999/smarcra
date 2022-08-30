@@ -7,7 +7,7 @@ import '../../../data/dummy_data.dart';
 import '../../../shared/widgets/buttons/action_button.dart';
 
 class EditTimeSheet extends StatefulWidget {
-  final TimesheetModel timesheet;
+  final TimeSheetModel timesheet;
   const EditTimeSheet({Key? key, required this.timesheet}) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _EditTimeSheetState extends State<EditTimeSheet> {
               child: Column(
                 children: [
                   SizedBox(height: 10.sp),
-                  Text('${widget.timesheet.name}-${widget.timesheet.period}-2021', style: const TextStyle(
+                  Text('${widget.timesheet.firstName}-${widget.timesheet.month}-2021', style: const TextStyle(
                     fontSize: 14,
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.w700,
