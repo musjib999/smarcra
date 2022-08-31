@@ -1,8 +1,8 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/core/service_injector.dart';
-import 'package:smarcra/data/dummy_data.dart';
 import 'package:smarcra/module/screens/leaves/add_leave.dart';
 import 'package:smarcra/shared/models/leave_model.dart';
 
@@ -25,11 +25,11 @@ class _LeavesState extends State<Leaves> {
   final ScrollController horizontalScroll = ScrollController();
   final ScrollController verticalScroll = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    _selected = List<bool>.generate(timesheets.length, (int index) => false);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _selected = List<bool>.generate(timesheets.length, (int index) => false);
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,69 +48,100 @@ class _LeavesState extends State<Leaves> {
             ),
           ),
           const SizedBox(height: 15),
-          SizedBox(
-            height: 58.h,
-            child: SingleChildScrollView(
-              child: AdaptiveScrollbar(
-                controller: verticalScroll,
-                width: 10,
-                child: AdaptiveScrollbar(
-                  controller: horizontalScroll,
-                  width: 10,
-                  position: ScrollbarPosition.bottom,
-                  sliderDecoration: const BoxDecoration(
-                    color: Colors.white54,
-                    borderRadius: BorderRadius.all(Radius.circular(12.0),
-                    ),
+          FutureBuilder<List<LeaveModel>>(
+            future: si.leaveService.getLeaves(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState ==
+                  ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
                   ),
-                  sliderActiveDecoration: const BoxDecoration(
-                    color: Colors.white54,
-                    borderRadius: BorderRadius.all(Radius.circular(12.0),
+                );
+              } else if (snapshot.hasError || snapshot.data!.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/svg/no-data.svg', width: 50.w,),
+                    SizedBox(height: 15.sp),
+                    const Text(
+                      'No TimeSheet Available!',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Roboto',
+                      ),
                     ),
-                  ),
-                  underSpacing: const EdgeInsets.only(bottom: 10),
-                  child: SingleChildScrollView(
-                    controller: horizontalScroll,
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Text('Name'),
+                  ],
+                );
+              }
+              List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
+              _selected = List<bool>.generate(leaves.length, (int index) => false);
+              return SizedBox(
+                height: 58.h,
+                child: SingleChildScrollView(
+                  child: AdaptiveScrollbar(
+                    controller: verticalScroll,
+                    width: 10,
+                    child: AdaptiveScrollbar(
+                      controller: horizontalScroll,
+                      width: 10,
+                      position: ScrollbarPosition.bottom,
+                      sliderDecoration: const BoxDecoration(
+                        color: Colors.white54,
+                        borderRadius: BorderRadius.all(Radius.circular(12.0),
                         ),
-                        DataColumn(
-                          label: Text('Start'),
+                      ),
+                      sliderActiveDecoration: const BoxDecoration(
+                        color: Colors.white54,
+                        borderRadius: BorderRadius.all(Radius.circular(12.0),
                         ),
-                        DataColumn(
-                          label: Text('End'),
-                        ),
-                        DataColumn(
-                          label: Text('Status'),
-                        )
-                      ],
-                      rows: leaves.map(
-                            (leave) => DataRow(
-                          selected: _selected[leaves.indexOf(leave)],
-                          onSelectChanged: (value){
-                            setState(() {
-                              _selected[leaves.indexOf(leave)] = value!;
-                              isActionButtonVisible = _selected[leaves.indexOf(leave)];
-                              _selectedLeave = leave;
-                            });
-                          },
-                          color: MaterialStateProperty.all(_selected[leaves.indexOf(leave)] == true ? AppColors.primaryColor.withOpacity(0.3): Colors.white54),
-                          cells: [
-                            DataCell(Text(leave.name)),
-                            DataCell(Text('${leave.startDate.day}-${leave.startDate.month}-${leave.startDate.year}')),
-                            DataCell(Text('${leave.stopDate.day}-${leave.stopDate.month}-${leave.stopDate.year}')),
-                            DataCell(Text(leave.status)),
+                      ),
+                      underSpacing: const EdgeInsets.only(bottom: 10),
+                      child: SingleChildScrollView(
+                        controller: horizontalScroll,
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(
+                              label: Text('Name'),
+                            ),
+                            DataColumn(
+                              label: Text('Start'),
+                            ),
+                            DataColumn(
+                              label: Text('End'),
+                            ),
+                            DataColumn(
+                              label: Text('Status'),
+                            )
                           ],
+                          rows: leaves.map(
+                                (leave) => DataRow(
+                              selected: _selected[leaves.indexOf(leave)],
+                              onSelectChanged: (value){
+                                // setState(() {
+                                //   _selected[leaves.indexOf(leave)] = value!;
+                                //   isActionButtonVisible = _selected[leaves.indexOf(leave)];
+                                //   _selectedLeave = leave;
+                                // });
+                              },
+                              color: MaterialStateProperty.all(_selected[leaves.indexOf(leave)] == true ? AppColors.primaryColor.withOpacity(0.3): Colors.white54),
+                              cells: [
+                                DataCell(Text('${leave.resourceFirstName} ${leave.resourceLastName}')),
+                                DataCell(Text('${leave.startDate.year}-${leave.startDate.month}-${leave.startDate.day}')),
+                                DataCell(Text('${leave.endDate.year}-${leave.endDate.month}-${leave.endDate.day}')),
+                                DataCell(Text(leave.statusCode)),
+                              ],
+                            ),
+                          ).toList(),
                         ),
-                      ).toList(),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }
           ),
           isActionButtonVisible == true ?  Container(
             margin: EdgeInsets.symmetric(horizontal: 8.sp),
@@ -140,10 +171,10 @@ class _LeavesState extends State<Leaves> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          si.dialogService.bottomSheet(
-            context,
-            body: const AddLeave(),
-          );
+          // si.dialogService.bottomSheet(
+          //   context,
+          //   body: const AddLeave(),
+          // );
         },
         child: const Icon(
           Icons.add,
