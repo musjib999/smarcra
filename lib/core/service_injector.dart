@@ -5,6 +5,8 @@ class ServiceInjector{
   DialogService dialogService = DialogService();
   AuthService authService = AuthService();
   TimeSheetService timeSheetService = TimeSheetService();
+  LeaveService leaveService = LeaveService();
+  ExpenseService expenseService = ExpenseService();
 }
 
 ServiceInjector si = ServiceInjector();
