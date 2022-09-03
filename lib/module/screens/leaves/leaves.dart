@@ -65,7 +65,7 @@ class _LeavesState extends State<Leaves> {
                     SvgPicture.asset('assets/svg/no-data.svg', width: 50.w,),
                     SizedBox(height: 15.sp),
                     const Text(
-                      'No TimeSheet Available!',
+                      'No Leave Available!',
                       style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.w700,
