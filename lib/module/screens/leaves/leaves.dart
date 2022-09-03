@@ -18,6 +18,7 @@ class Leaves extends StatefulWidget {
 }
 
 class _LeavesState extends State<Leaves> {
+  late Future<List<LeaveModel>> allLeaves;
   bool isActionButtonVisible = false;
   List<bool> _selected = [];
   LeaveModel? _selectedLeave;
@@ -25,11 +26,12 @@ class _LeavesState extends State<Leaves> {
   final ScrollController horizontalScroll = ScrollController();
   final ScrollController verticalScroll = ScrollController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _selected = List<bool>.generate(timesheets.length, (int index) => false);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    allLeaves = si.leaveService.getLeaves(context);
+    allLeaves.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,7 @@ class _LeavesState extends State<Leaves> {
           ),
           const SizedBox(height: 15),
           FutureBuilder<List<LeaveModel>>(
-            future: si.leaveService.getLeaves(context),
+            future: allLeaves,
             builder: (context, snapshot) {
               if (snapshot.connectionState ==
                   ConnectionState.waiting) {
@@ -76,7 +78,6 @@ class _LeavesState extends State<Leaves> {
                 );
               }
               List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
-              _selected = List<bool>.generate(leaves.length, (int index) => false);
               return SizedBox(
                 height: 58.h,
                 child: SingleChildScrollView(
@@ -120,11 +121,11 @@ class _LeavesState extends State<Leaves> {
                                 (leave) => DataRow(
                               selected: _selected[leaves.indexOf(leave)],
                               onSelectChanged: (value){
-                                // setState(() {
-                                //   _selected[leaves.indexOf(leave)] = value!;
-                                //   isActionButtonVisible = _selected[leaves.indexOf(leave)];
-                                //   _selectedLeave = leave;
-                                // });
+                                setState(() {
+                                  _selected[leaves.indexOf(leave)] = value!;
+                                  isActionButtonVisible = _selected[leaves.indexOf(leave)];
+                                  _selectedLeave = leave;
+                                });
                               },
                               color: MaterialStateProperty.all(_selected[leaves.indexOf(leave)] == true ? AppColors.primaryColor.withOpacity(0.3): Colors.white54),
                               cells: [
