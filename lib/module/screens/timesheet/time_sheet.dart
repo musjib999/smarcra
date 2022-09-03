@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/module/screens/timesheet/edit_timesheet.dart';
+import 'package:smarcra/shared/global/global_var.dart';
 import 'package:smarcra/shared/themes/colors.dart';
 import 'package:smarcra/shared/widgets/buttons/action_button.dart';
 import 'package:smarcra/shared/widgets/form/primary_text_field.dart';
@@ -18,6 +19,7 @@ class Timesheet extends StatefulWidget {
 }
 
 class _TimesheetState extends State<Timesheet> {
+  late Future<List<TimeSheetModel>> futureTimeSheet;
   bool isActionButtonVisible = false;
   List<bool> _selected = [];
   TimeSheetModel? _selectedTimesheet;
@@ -25,11 +27,13 @@ class _TimesheetState extends State<Timesheet> {
   final ScrollController horizontalScroll = ScrollController();
   final ScrollController verticalScroll = ScrollController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _selected = List<bool>.generate(timesheets.length, (int index) => false);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // _selected = List<bool>.generate(timesheets.length, (int index) => false);
+    futureTimeSheet = si.timeSheetService.getTimeSheets(context);
+    futureTimeSheet.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,7 @@ class _TimesheetState extends State<Timesheet> {
                        controller: horizontalScroll,
                        scrollDirection: Axis.horizontal,
                        child: FutureBuilder<List<TimeSheetModel>>(
-                           future: si.timeSheetService.getTimeSheets(context),
+                           future: futureTimeSheet,
                            builder: (context, snapshot) {
                              if (snapshot.connectionState ==
                                  ConnectionState.waiting) {
@@ -105,7 +109,7 @@ class _TimesheetState extends State<Timesheet> {
                                );
                              }
                              List<TimeSheetModel> timeSheets = snapshot.data as List<TimeSheetModel>;
-                             _selected = List<bool>.generate(timeSheets.length, (int index) => false);
+                             // _selected = List<bool>.generate(timeSheets.length, (int index) => false);
                              return DataTable(
                                columns: const [
                                  DataColumn(
@@ -129,15 +133,13 @@ class _TimesheetState extends State<Timesheet> {
                                      (item) => DataRow(
                                    selected:
                                    _selected[timeSheets.indexOf(item)],
-                                   onSelectChanged: (value) {
-                                     setState(() {
-                                       _selected[timeSheets.indexOf(item)] =
-                                       value!;
-                                       isActionButtonVisible =
-                                       _selected[timeSheets.indexOf(item)];
-                                       _selectedTimesheet = item;
-                                     });
-                                   },
+                                       onSelectChanged: (value){
+                                         setState(() {
+                                           _selected[timeSheets.indexOf(item)] = value!;
+                                           isActionButtonVisible = _selected[timeSheets.indexOf(item)];
+                                           _selectedTimesheet = item;
+                                         });
+                                       },
                                    color: MaterialStateProperty.all(
                                        _selected[timeSheets.indexOf(item)] ==
                                            true
