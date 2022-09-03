@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/module/screens/timesheet/edit_timesheet.dart';
-import 'package:smarcra/shared/global/global_var.dart';
 import 'package:smarcra/shared/themes/colors.dart';
 import 'package:smarcra/shared/widgets/buttons/action_button.dart';
 import 'package:smarcra/shared/widgets/form/primary_text_field.dart';
@@ -19,7 +18,7 @@ class Timesheet extends StatefulWidget {
 }
 
 class _TimesheetState extends State<Timesheet> {
-  late Future<List<TimeSheetModel>> futureTimeSheet;
+  late Future<List<TimeSheetModel>> allTimeSheets;
   bool isActionButtonVisible = false;
   List<bool> _selected = [];
   TimeSheetModel? _selectedTimesheet;
@@ -30,9 +29,8 @@ class _TimesheetState extends State<Timesheet> {
   @override
   void initState() {
     super.initState();
-    // _selected = List<bool>.generate(timesheets.length, (int index) => false);
-    futureTimeSheet = si.timeSheetService.getTimeSheets(context);
-    futureTimeSheet.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
+    allTimeSheets = si.timeSheetService.getTimeSheets(context);
+    allTimeSheets.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
   }
 
   @override
@@ -82,7 +80,7 @@ class _TimesheetState extends State<Timesheet> {
                        controller: horizontalScroll,
                        scrollDirection: Axis.horizontal,
                        child: FutureBuilder<List<TimeSheetModel>>(
-                           future: futureTimeSheet,
+                           future: allTimeSheets,
                            builder: (context, snapshot) {
                              if (snapshot.connectionState ==
                                  ConnectionState.waiting) {
@@ -109,7 +107,6 @@ class _TimesheetState extends State<Timesheet> {
                                );
                              }
                              List<TimeSheetModel> timeSheets = snapshot.data as List<TimeSheetModel>;
-                             // _selected = List<bool>.generate(timeSheets.length, (int index) => false);
                              return DataTable(
                                columns: const [
                                  DataColumn(
@@ -149,7 +146,7 @@ class _TimesheetState extends State<Timesheet> {
                                    cells: [
                                      DataCell(
                                        Text(
-                                         '${item.firstName} ${item.lastName}',
+                                         '${item.lastName} ${item.firstName}',
                                          maxLines: 1,
                                          overflow: TextOverflow.ellipsis,
                                        ),
