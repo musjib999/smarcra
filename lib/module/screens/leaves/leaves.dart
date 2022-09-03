@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/core/service_injector.dart';
-import 'package:smarcra/module/screens/leaves/add_leave.dart';
 import 'package:smarcra/shared/models/leave_model.dart';
 
 import '../../../shared/themes/colors.dart';
 import '../../../shared/widgets/buttons/action_button.dart';
 import '../../../shared/widgets/form/primary_text_field.dart';
+import 'add_leave.dart';
 
 class Leaves extends StatefulWidget {
   const Leaves({Key? key}) : super(key: key);
@@ -172,10 +172,10 @@ class _LeavesState extends State<Leaves> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // si.dialogService.bottomSheet(
-          //   context,
-          //   body: const AddLeave(),
-          // );
+          si.dialogService.bottomSheet(
+            context,
+            body: const AddLeave(),
+          );
         },
         child: const Icon(
           Icons.add,
@@ -185,42 +185,3 @@ class _LeavesState extends State<Leaves> {
     );
   }
 }
-
-
-// DataTable(
-//                     columns: const [
-//                       DataColumn(
-//                         label: Text('Name'),
-//                       ),
-//                       DataColumn(
-//                         label: Text('Start'),
-//                       ),
-//                       DataColumn(
-//                         label: Text('End'),
-//                       ),
-//                       DataColumn(
-//                         label: Text('Status'),
-//                       )
-//                     ],
-//                     rows: leaves.map(
-//                           (leave) => DataRow(
-//                             selected: _selected[leaves.indexOf(leave)],
-//                             onSelectChanged: (value){
-//                               setState(() {
-//                                 _selected[leaves.indexOf(leave)] = value!;
-//                                 isActionButtonVisible = _selected[leaves.indexOf(leave)];
-//                                 _selectedLeave = leave;
-//                               });
-//                             },
-//                             color: MaterialStateProperty.all(_selected[leaves.indexOf(leave)] == true ? AppColors.primaryColor.withOpacity(0.3): Colors.white54),
-//                             cells: [
-//                           DataCell(Text(leave.name)),
-//                           DataCell(Text('${leave.startDate.day}-${leave.startDate.month}-${leave.startDate.year}')),
-//                           DataCell(Text('${leave.stopDate.day}-${leave.stopDate.month}-${leave.stopDate.year}')),
-//                           DataCell(Text(leave.status)),
-//                         ],
-//                       ),
-//                     ).toList(),
-//                   ),
-
-//

@@ -18,6 +18,7 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  late Future<List<ExpenseModel>> allExpenses;
   bool isActionButtonVisible = false;
   List<bool> _selected = [];
   ExpenseModel? _selectedExpense;
@@ -28,7 +29,8 @@ class _ExpensesState extends State<Expenses> {
   @override
   void initState() {
     super.initState();
-    // _selected = List<bool>.generate(expenses.length, (int index) => false);
+    allExpenses = si.expenseService.getExpenses(context);
+    allExpenses.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
   }
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class _ExpensesState extends State<Expenses> {
         title: const Text('Expenses'),
       ),
       body: FutureBuilder<List<ExpenseModel>>(
-        future: si.expenseService.getExpenses(context),
+        future: allExpenses,
         builder: (context, snapshot) {
           if (snapshot.connectionState ==
               ConnectionState.waiting) {
@@ -64,7 +66,6 @@ class _ExpensesState extends State<Expenses> {
             );
           }
           List<ExpenseModel> expenses = snapshot.data as List<ExpenseModel>;
-          _selected = List<bool>.generate(expenses.length, (int index) => false);
           return Column(
             children: [
               Padding(
