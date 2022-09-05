@@ -34,7 +34,7 @@ class DialogService {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(1960, 1),
-        lastDate: DateTime.now());
+        lastDate: DateTime(2050));
     if (picked != null) {
       selectedDate = picked;
       // isPicked = true;
