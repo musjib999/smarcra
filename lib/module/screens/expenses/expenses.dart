@@ -50,9 +50,13 @@ class _ExpensesState extends State<Expenses> {
             );
           } else if (snapshot.hasError || snapshot.data!.isEmpty) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/svg/no-data.svg', width: 50.w,),
+                SizedBox(height: 20.h),
+                Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/no-data.svg',
+                      width: 50.w,
+                    )),
                 SizedBox(height: 15.sp),
                 const Text(
                   'No Expenses Available!',
@@ -77,9 +81,8 @@ class _ExpensesState extends State<Expenses> {
                   prefixIcon: Icons.search,
                 ),
               ),
-              const SizedBox(height: 15),
               SizedBox(
-                height: 58.h,
+                height: 55.h,
                 child: SingleChildScrollView(
                   child: AdaptiveScrollbar(
                     controller: verticalScroll,
@@ -148,7 +151,7 @@ class _ExpensesState extends State<Expenses> {
               ),
               isActionButtonVisible == true ?  Container(
                 margin: EdgeInsets.symmetric(horizontal: 8.sp),
-                height: 8.h, child: Row(
+                height: 7.h, child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(

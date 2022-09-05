@@ -17,12 +17,13 @@ class LeaveService {
       },
     );
     response.fold((success) {
-      if(success!.code == 200){
-        for(var leave in success.data){
+      if (success!.code == 200) {
+        for (var leave in success.data) {
           leaves.add(LeaveModel.fromJson(leave));
         }
-      }else{
-        si.dialogService.successSnackBar(context, success.data['message'], true);
+      } else {
+        si.dialogService
+            .successSnackBar(context, success.data['message'], true);
         leaves = [];
       }
     }, (error) {
@@ -30,5 +31,29 @@ class LeaveService {
       leaves = [];
     });
     return leaves;
+  }
+
+  Future addLeave(BuildContext context, {required String title, required DateTime startDate, required DateTime stopDate}) async {
+    List<DateTime> getDaysInBetween(DateTime startDate, DateTime endDate) {
+      List<DateTime> days = [];
+      for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+        days.add(startDate.add(Duration(days: i)));
+      }
+      return days;
+    }
+   final response =  await apiData.postRequest(
+      '$appUrl/leave/resource/${currentUser.resourceId}',
+      context: context,
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ${token.accessToken}'
+      },
+    );
+   response.fold((success){
+
+   }, (error) {
+
+   },
+   );
   }
 }

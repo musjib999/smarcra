@@ -32,7 +32,7 @@ class ApiData {
       si.dialogService.successSnackBar(context, 'Please check your internet connection', true);
      return Right(
         RequestError(
-            err.message
+            'Please check your internet connection'
         )
       );
     }
@@ -63,7 +63,7 @@ class ApiData {
     } on SocketException catch (error) {
       return Right(
           RequestError(
-              error.message
+              'Please check your internet connection'
           )
       );
     }

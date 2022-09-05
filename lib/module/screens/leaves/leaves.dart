@@ -38,48 +38,51 @@ class _LeavesState extends State<Leaves> {
       appBar: AppBar(
         title: const Text('Leaves'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: PrimaryTextField(
-              controller: TextEditingController(),
-              label: 'Search',
-              hintText: 'Search',
-              prefixIcon: Icons.search,
-            ),
-          ),
-          const SizedBox(height: 15),
-          FutureBuilder<List<LeaveModel>>(
-            future: allLeaves,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState ==
-                  ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
+      body: FutureBuilder<List<LeaveModel>>(
+        future: allLeaves,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState ==
+              ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
+          } else if (snapshot.hasError || snapshot.data!.isEmpty) {
+            return Column(
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/no-data.svg',
+                      width: 50.w,
+                    )),
+                SizedBox(height: 15.sp),
+                const Text(
+                  'No Leaves Available!',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Roboto',
                   ),
-                );
-              } else if (snapshot.hasError || snapshot.data!.isEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/svg/no-data.svg', width: 50.w,),
-                    SizedBox(height: 15.sp),
-                    const Text(
-                      'No Leave Available!',
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ],
-                );
-              }
-              List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
-              return SizedBox(
-                height: 58.h,
+                ),
+              ],
+            );
+          }
+          List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: PrimaryTextField(
+                  controller: TextEditingController(),
+                  label: 'Search',
+                  hintText: 'Search',
+                  prefixIcon: Icons.search,
+                ),
+              ),
+              SizedBox(
+                height: 55.h,
                 child: SingleChildScrollView(
                   child: AdaptiveScrollbar(
                     controller: verticalScroll,
@@ -141,34 +144,34 @@ class _LeavesState extends State<Leaves> {
                     ),
                   ),
                 ),
-              );
-            }
-          ),
-          isActionButtonVisible == true ?  Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.sp),
-            height: 8.h, child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: InkWell(
-                    onTap: (){
-                      si.dialogService.successSnackBar(context, 'Leave validated', false);
-                    },
-                    child: const ActionButton(title: 'Validate', icon: Icons.done,)
-                ),
               ),
-              SizedBox(width: 5.sp),
-              Expanded(
-                child: InkWell(
-                    onTap: (){
-                      si.dialogService.successSnackBar(context, 'Leave Rejected', true);
-                    },
-                    child: const ActionButton(title: 'Reject', icon: Icons.close,)
-                ),
-              ),
+              isActionButtonVisible == true ?  Container(
+                margin: EdgeInsets.symmetric(horizontal: 8.sp),
+                height: 7.h, child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InkWell(
+                        onTap: (){
+                          si.dialogService.successSnackBar(context, 'Leave validated', false);
+                        },
+                        child: const ActionButton(title: 'Validate', icon: Icons.done,)
+                    ),
+                  ),
+                  SizedBox(width: 5.sp),
+                  Expanded(
+                    child: InkWell(
+                        onTap: (){
+                          si.dialogService.successSnackBar(context, 'Leave Rejected', true);
+                        },
+                        child: const ActionButton(title: 'Reject', icon: Icons.close,)
+                    ),
+                  ),
+                ],
+              ),) : Container(),
             ],
-          ),) : Container(),
-        ],
+          );
+        }
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
