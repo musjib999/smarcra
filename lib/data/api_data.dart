@@ -10,7 +10,7 @@ import 'package:smarcra/shared/models/api_response_model.dart';
 import '../core/errors/request_error.dart';
 
 class ApiData {
-  Future<Either<ApiResponseModel?, RequestError>> postRequest(String url, {required BuildContext context, Map<String, dynamic>? body, Map<String, String>? headers, Encoding? encoding}) async {
+  Future<Either<ApiResponseModel?, RequestError>> postRequest(String url, {required BuildContext context, dynamic body, Map<String, String>? headers, Encoding? encoding}) async {
     ApiResponseModel apiResponseModel;
     try{
       final response = await http.post(
