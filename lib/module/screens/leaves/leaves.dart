@@ -30,8 +30,10 @@ class _LeavesState extends State<Leaves> {
   void initState() {
     super.initState();
     allLeaves = si.leaveService.getLeaves(context);
-    allLeaves.then((value) => _selected = List<bool>.generate(value.length, (int index) => false));
+    allLeaves.then((value) =>
+        _selected = List<bool>.generate(value.length, (int index) => false));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,140 +41,177 @@ class _LeavesState extends State<Leaves> {
         title: const Text('Leaves'),
       ),
       body: FutureBuilder<List<LeaveModel>>(
-        future: allLeaves,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
-              ),
-            );
-          } else if (snapshot.hasError || snapshot.data!.isEmpty) {
-            return Column(
-              children: [
-                SizedBox(height: 20.h),
-                Center(
-                    child: SvgPicture.asset(
-                      'assets/svg/no-data.svg',
-                      width: 50.w,
-                    )),
-                SizedBox(height: 15.sp),
-                const Text(
-                  'No Leaves Available!',
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Roboto',
-                  ),
+          future: allLeaves,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryColor,
                 ),
-              ],
-            );
-          }
-          List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: PrimaryTextField(
-                  controller: TextEditingController(),
-                  label: 'Search',
-                  hintText: 'Search',
-                  prefixIcon: Icons.search,
-                ),
-              ),
-              SizedBox(
-                height: 55.h,
-                child: SingleChildScrollView(
-                  child: AdaptiveScrollbar(
-                    controller: verticalScroll,
-                    width: 10,
-                    child: AdaptiveScrollbar(
-                      controller: horizontalScroll,
-                      width: 10,
-                      position: ScrollbarPosition.bottom,
-                      sliderDecoration: const BoxDecoration(
-                        color: Colors.white54,
-                        borderRadius: BorderRadius.all(Radius.circular(12.0),
-                        ),
-                      ),
-                      sliderActiveDecoration: const BoxDecoration(
-                        color: Colors.white54,
-                        borderRadius: BorderRadius.all(Radius.circular(12.0),
-                        ),
-                      ),
-                      underSpacing: const EdgeInsets.only(bottom: 10),
-                      child: SingleChildScrollView(
-                        controller: horizontalScroll,
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(
-                              label: Text('Name'),
-                            ),
-                            DataColumn(
-                              label: Text('Start'),
-                            ),
-                            DataColumn(
-                              label: Text('End'),
-                            ),
-                            DataColumn(
-                              label: Text('Status'),
-                            )
-                          ],
-                          rows: leaves.map(
-                                (leave) => DataRow(
-                              selected: _selected[leaves.indexOf(leave)],
-                              onSelectChanged: (value){
-                                setState(() {
-                                  _selected[leaves.indexOf(leave)] = value!;
-                                  isActionButtonVisible = _selected[leaves.indexOf(leave)];
-                                  _selectedLeave = leave;
-                                });
-                              },
-                              color: MaterialStateProperty.all(_selected[leaves.indexOf(leave)] == true ? AppColors.primaryColor.withOpacity(0.3): Colors.white54),
-                              cells: [
-                                DataCell(Text('${leave.resourceFirstName} ${leave.resourceLastName}')),
-                                DataCell(Text('${leave.startDate.year}-${leave.startDate.month}-${leave.startDate.day}')),
-                                DataCell(Text('${leave.endDate.year}-${leave.endDate.month}-${leave.endDate.day}')),
-                                DataCell(Text(leave.statusCode)),
-                              ],
-                            ),
-                          ).toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              isActionButtonVisible == true ?  Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.sp),
-                height: 7.h, child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              );
+            } else if (snapshot.hasError || snapshot.data!.isEmpty) {
+              return Column(
                 children: [
-                  Expanded(
-                    child: InkWell(
-                        onTap: (){
-                          si.dialogService.successSnackBar(context, 'Leave validated', false);
-                        },
-                        child: const ActionButton(title: 'Validate', icon: Icons.done,)
-                    ),
-                  ),
-                  SizedBox(width: 5.sp),
-                  Expanded(
-                    child: InkWell(
-                        onTap: (){
-                          si.dialogService.successSnackBar(context, 'Leave Rejected', true);
-                        },
-                        child: const ActionButton(title: 'Reject', icon: Icons.close,)
+                  SizedBox(height: 20.h),
+                  Center(
+                      child: SvgPicture.asset(
+                    'assets/svg/no-data.svg',
+                    width: 50.w,
+                  )),
+                  SizedBox(height: 15.sp),
+                  const Text(
+                    'No Leaves Available!',
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Roboto',
                     ),
                   ),
                 ],
-              ),) : Container(),
-            ],
-          );
-        }
-      ),
+              );
+            }
+            List<LeaveModel> leaves = snapshot.data as List<LeaveModel>;
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: PrimaryTextField(
+                    controller: TextEditingController(),
+                    label: 'Search',
+                    hintText: 'Search',
+                    prefixIcon: Icons.search,
+                  ),
+                ),
+                SizedBox(
+                  height: 55.h,
+                  child: SingleChildScrollView(
+                    child: AdaptiveScrollbar(
+                      controller: verticalScroll,
+                      width: 10,
+                      child: AdaptiveScrollbar(
+                        controller: horizontalScroll,
+                        width: 10,
+                        position: ScrollbarPosition.bottom,
+                        sliderDecoration: const BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                        ),
+                        sliderActiveDecoration: const BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                        ),
+                        underSpacing: const EdgeInsets.only(bottom: 10),
+                        child: SingleChildScrollView(
+                          controller: horizontalScroll,
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(
+                                label: Text('Name'),
+                              ),
+                              DataColumn(
+                                label: Text('Type'),
+                              ),
+                              DataColumn(
+                                label: Text('Start'),
+                              ),
+                              DataColumn(
+                                label: Text('End'),
+                              ),
+                              DataColumn(
+                                label: Text('Status'),
+                              )
+                            ],
+                            rows: leaves
+                                .map(
+                                  (leave) => DataRow(
+                                    selected: _selected[leaves.indexOf(leave)],
+                                    onSelectChanged: (value) {
+                                      setState(() {
+                                        _selected[leaves.indexOf(leave)] =
+                                            value!;
+                                        isActionButtonVisible =
+                                            _selected[leaves.indexOf(leave)];
+                                        _selectedLeave = leave;
+                                      });
+                                    },
+                                    color: MaterialStateProperty.all(
+                                        _selected[leaves.indexOf(leave)] == true
+                                            ? AppColors.primaryColor
+                                                .withOpacity(0.3)
+                                            : Colors.white54),
+                                    cells: [
+                                      DataCell(
+                                        Text(
+                                            '${leave.resourceFirstName} ${leave.resourceLastName}'),
+                                      ),
+                                      DataCell(
+                                        Text(leave.typeCode),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                            '${leave.startDate.year}-${leave.startDate.month}-${leave.startDate.day}'),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                            '${leave.endDate.year}-${leave.endDate.month}-${leave.endDate.day}'),
+                                      ),
+                                      DataCell(
+                                        Text(leave.statusCode),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.sp),
+                isActionButtonVisible == true
+                    ? Container(
+                        margin: EdgeInsets.symmetric(horizontal: 8.sp),
+                        height: 7.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                  onTap: () {
+                                    si.dialogService.successSnackBar(
+                                        context, 'Leave validated', false);
+                                  },
+                                  child: const ActionButton(
+                                    title: 'Validate',
+                                    icon: Icons.done,
+                                  )),
+                            ),
+                            SizedBox(width: 5.sp),
+                            Expanded(
+                              child: InkWell(
+                                  onTap: () {
+                                    si.dialogService.successSnackBar(
+                                        context, 'Leave Rejected', true);
+                                  },
+                                  child: const ActionButton(
+                                    title: 'Reject',
+                                    icon: Icons.close,
+                                  ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
+              ],
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           si.dialogService.bottomSheet(

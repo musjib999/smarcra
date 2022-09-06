@@ -101,7 +101,9 @@ class _AddExpenseState extends State<AddExpense> {
                 SizedBox(width: 5.sp),
                 Expanded(
                   child: InkWell(
-                      onTap: (){},
+                      onTap: (){
+                        si.routerService.popRoute(context);
+                      },
                       child: const ActionButton(title: 'Cancel', icon: Icons.close,)
                   ),
                 ),

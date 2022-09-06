@@ -3,29 +3,41 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class DialogService {
-  void bottomSheet(BuildContext context, {required Widget body}){
+  void bottomSheet(BuildContext context, {required Widget body}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              topRight: Radius.circular(10.0),
-            ),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
         ),
-        builder: (context){
+        builder: (context) {
           return body;
-        }
-    );
+        });
   }
 
-  void successSnackBar(BuildContext context, String message, bool isRejected){
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
-      children: [
-        isRejected == true ? const Icon( Icons.close_rounded, color: Colors.red,): const Icon( Icons.done, color: Colors.green,),
-        SizedBox(width: 3.sp),
-        Text(message)
-      ],
-    )));
+  void successSnackBar(BuildContext context, String message, bool isRejected) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          children: [
+            isRejected == true
+                ? const Icon(
+                    Icons.close_rounded,
+                    color: Colors.red,
+                  )
+                : const Icon(
+                    Icons.done,
+                    color: Colors.green,
+                  ),
+            SizedBox(width: 3.sp),
+            Text(message)
+          ],
+        ),
+      ),
+    );
   }
 
   Future<DateTime?> selectDate(BuildContext context) async {

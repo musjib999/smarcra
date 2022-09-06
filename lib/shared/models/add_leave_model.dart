@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class LeaveModel {
-  LeaveModel({
+class AddedLeaveModel {
+  AddedLeaveModel({
     required this.leaveId,
     required this.resourceFirstName,
     required this.resourceLastName,
@@ -23,17 +23,17 @@ class LeaveModel {
   final DateTime startDate;
   final DateTime endDate;
   final String statusCode;
-  final double total;
-  final String typeCode;
-  final String? managerFirstName;
-  final String? managerLastName;
-  final int resourceId;
+  final int total;
+  final dynamic typeCode;
+  final dynamic managerFirstName;
+  final dynamic managerLastName;
+  final dynamic resourceId;
 
-  factory LeaveModel.fromRawJson(String str) => LeaveModel.fromJson(json.decode(str));
+  factory AddedLeaveModel.fromRawJson(String str) => AddedLeaveModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory LeaveModel.fromJson(Map<String, dynamic> json) => LeaveModel(
+  factory AddedLeaveModel.fromJson(Map<String, dynamic> json) => AddedLeaveModel(
     leaveId: json["leaveId"],
     resourceFirstName: json["resourceFirstName"],
     resourceLastName: json["resourceLastName"],
@@ -41,7 +41,7 @@ class LeaveModel {
     startDate: DateTime.parse(json["startDate"]),
     endDate: DateTime.parse(json["endDate"]),
     statusCode: json["statusCode"],
-    total: json["total"].toDouble(),
+    total: json["total"],
     typeCode: json["typeCode"],
     managerFirstName: json["managerFirstName"],
     managerLastName: json["managerLastName"],
@@ -61,42 +61,5 @@ class LeaveModel {
     "managerFirstName": managerFirstName,
     "managerLastName": managerLastName,
     "resourceId": resourceId,
-  };
-}
-
-
-class DayListModel {
-  DayListModel({
-    required this.date,
-    required this.morningValue,
-    required this.afternoonValue,
-    required this.isMorningValue,
-    required this.isAfternoonValue,
-  });
-
-  final DateTime date;
-  final int morningValue;
-  final int afternoonValue;
-  final bool isMorningValue;
-  final bool isAfternoonValue;
-
-  factory DayListModel.fromRawJson(String str) => DayListModel.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory DayListModel.fromJson(Map<String, dynamic> json) => DayListModel(
-    date: DateTime.parse(json["date"]),
-    morningValue: json["morningValue"],
-    afternoonValue: json["afternoonValue"],
-    isMorningValue: json["isMorningValue"],
-    isAfternoonValue: json["isAfternoonValue"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
-    "morningValue": morningValue,
-    "afternoonValue": afternoonValue,
-    "isMorningValue": isMorningValue,
-    "isAfternoonValue": isAfternoonValue,
   };
 }
