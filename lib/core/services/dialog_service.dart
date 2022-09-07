@@ -63,7 +63,7 @@ class DialogService {
     );
     String fileName = '';
     if (result != null) {
-      fileName = result.files.first.name;
+      fileName = result.files.first.path!;
     }
     return fileName;
   }
