@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:smarcra/shared/models/expense_model.dart';
 
@@ -31,5 +33,93 @@ class ExpenseService {
       expenses = [];
     });
     return expenses;
+  }
+
+  Future<AddedExpenseModel?> addExpense(
+      {required BuildContext context,
+      required double amount,
+      required DateTime date,
+      required String file}) async {
+    AddedExpenseModel? expense;
+    final response = await apiData.postRequest(
+      '$appUrl/expense/resource/${currentUser.resourceId}',
+      context: context,
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ${token.accessToken}'
+      },
+      body: jsonEncode({
+        'id': null,
+        'amount': amount,
+        'countryId': 630,
+        'description': '',
+        'expenseDate': '${date.year}-${date.month}-${date.day}',
+        'expenseTypeId': 5,
+        'missionId': null,
+        'month': date.month,
+        'resourceId': currentUser.resourceId,
+        'year': date.year,
+        'file': file,
+      }),
+    );
+    response.fold(
+      (success) {
+        if (success!.code == 201) {
+          expense = AddedExpenseModel.fromJson(success.data);
+        } else {
+          si.dialogService
+              .successSnackBar(context, success.data['message'].toString(), true);
+          expense = AddedExpenseModel(
+              id: 0,
+              resourceId: 0,
+              resourceName: '',
+              year: 0000,
+              month: 0,
+              missionId: 0,
+              missionName: null,
+              expenseTypeCode: '',
+              expenseTypeLabel: null,
+              expenseStatusCode: '',
+              expenseDate: DateTime.now(),
+              countryCode: '',
+              amountWithVat: null,
+              vat: null,
+              vatAmount: null,
+              amountWithoutVat: null,
+              description: '',
+              fileName: '',
+              fileDownloadLink: '',
+              fileId: 0,
+          );
+        }
+      },
+      (error) {
+        si.dialogService
+            .successSnackBar(context, error.error, true);
+        expense = AddedExpenseModel(
+          id: 0,
+          resourceId: 0,
+          resourceName: '',
+          year: 0000,
+          month: 0,
+          missionId: 0,
+          missionName: null,
+          expenseTypeCode: '',
+          expenseTypeLabel: null,
+          expenseStatusCode: '',
+          expenseDate: DateTime.now(),
+          countryCode: '',
+          amountWithVat: null,
+          vat: null,
+          vatAmount: null,
+          amountWithoutVat: null,
+          description: '',
+          fileName: '',
+          fileDownloadLink: '',
+          fileId: 0,
+        );
+      },
+    );
+    return expense;
   }
 }

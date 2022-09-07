@@ -7,6 +7,7 @@ class PrimaryTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool obsecureText;
+ final TextInputType? keyboardType;
   final IconData? prefixIcon;
   final IconButton? suffixIcon;
  final String? Function(String?)? validator;
@@ -16,6 +17,7 @@ class PrimaryTextField extends StatelessWidget {
       required this.label,
       required this.hintText,
       this.obsecureText = false,
+        this.keyboardType,
         this.validator,
       this.prefixIcon,
       this.suffixIcon})
@@ -27,6 +29,7 @@ class PrimaryTextField extends StatelessWidget {
       obscureText: obsecureText,
       controller: controller,
       validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         prefixIcon: Icon(prefixIcon),
         hintText: hintText,

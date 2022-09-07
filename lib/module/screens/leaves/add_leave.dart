@@ -1,6 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/shared/widgets/buttons/secondary_button.dart';

@@ -28,7 +28,7 @@ class ApiData {
         apiResponseModel = ApiResponseModel(code: response.statusCode, data: jsonDecode(response.body))
         );
       }
-    }on SocketException catch(err){
+    }on SocketException catch(_){
       si.dialogService.successSnackBar(context, 'Please check your internet connection', true);
      return Right(
         RequestError(
@@ -60,7 +60,7 @@ class ApiData {
           ),
         );
       }
-    } on SocketException catch (error) {
+    } on SocketException catch (_) {
       return Right(
           RequestError(
               'Please check your internet connection'
