@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:smarcra/core/errors/request_error.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/data/api_data.dart';
+import 'package:smarcra/data/local_data.dart';
 import 'package:smarcra/shared/global/configs.dart';
 import 'package:smarcra/shared/global/global_var.dart';
 import 'package:smarcra/shared/models/token_model.dart';
 import 'package:smarcra/shared/models/user_model.dart';
 
 class AuthService {
-  Future<TokenModel?> requestForToken(BuildContext context, {required String username, required String password}) async {
+  Future<TokenModel?> requestForToken(BuildContext context,
+      {required String username, required String password}) async {
     TokenModel? token;
     String apiUsername = 'smartcra-dev';
     String apiPassword = 'smartcra-dev123@!';
@@ -35,7 +37,8 @@ class AuthService {
         if (success!.code == 200) {
           token = TokenModel.fromJson(success.data);
         } else {
-          si.dialogService.successSnackBar(context, success.data['error_description'], true);
+          si.dialogService.successSnackBar(
+              context, success.data['error_description'], true);
           token = TokenModel(
             accessToken: '',
             tokenType: '',
@@ -61,8 +64,7 @@ class AuthService {
     return token;
   }
 
-  Future<Either<UserModel?, RequestError>> getUser(
-      {required String token}) async {
+  Future<UserModel?> getUser({required String token}) async {
     UserModel? user;
     final response = await apiData.getRequest(
       '$appUrl/user',
@@ -74,58 +76,72 @@ class AuthService {
     response.fold(
       (success) {
         if (success!.code == 200) {
-          Left(user = UserModel.fromJson(success.data));
+          user = UserModel.fromJson(success.data);
         } else {
-          Left(
-            user = UserModel(
-              resourceId: 0,
-              firstName: '',
-              lastName: '',
-              email: '',
-              roleId: 0,
-              roleName: '',
-              permissionList: [],
-              token: token,
-              dateFormat: '',
-              timesheetUnit: '',
-              organization: '',
-              leaveUnit: '',
-              roleCode: '',
-            ),
+          user = UserModel(
+            resourceId: 0,
+            firstName: '',
+            lastName: '',
+            email: '',
+            roleId: 0,
+            roleName: '',
+            permissionList: [],
+            token: token,
+            dateFormat: '',
+            timesheetUnit: '',
+            organization: '',
+            leaveUnit: '',
+            roleCode: '',
           );
         }
       },
       (error) {
-        return Right(error.error);
+        user = UserModel(
+          resourceId: 0,
+          firstName: '',
+          lastName: '',
+          email: '',
+          roleId: 0,
+          roleName: '',
+          permissionList: [],
+          token: token,
+          dateFormat: '',
+          timesheetUnit: '',
+          organization: '',
+          leaveUnit: '',
+          roleCode: '',
+        );
       },
     );
-    return Left(user);
+    return user;
   }
 
-  Future<bool> login(BuildContext context, {required String username, required String password}) async {
+  Future<bool> login(BuildContext context,
+      {required String username, required String password}) async {
     bool isLoginSuccessful = false;
-    final requestedToken = await requestForToken(context, username: username, password: password );
+    final requestedToken =
+        await requestForToken(context, username: username, password: password);
     if (requestedToken!.accessToken != '' &&
         requestedToken.expiresIn != 0 &&
         requestedToken.refreshToken != '') {
+      await localData.addStringToSP(
+          key: 'token', value: requestedToken.toRawJson());
       token = requestedToken;
-      final response = await getUser(token: requestedToken.accessToken);
-      response.fold(
-        (user) {
-          if(user!.firstName == '' && user.email == '' && user.resourceId == 0){
-            isLoginSuccessful = false;
-          }else{
-            currentUser = user;
-            isLoginSuccessful = true;
-          }
-        },
-        (error) {
-          si.dialogService.successSnackBar(context, error.error, true);
-        },
-      );
+      final user = await getUser(token: requestedToken.accessToken);
+
+      if (user!.firstName == '' && user.email == '' && user.resourceId == 0) {
+        isLoginSuccessful = false;
+      } else {
+        await localData.addStringToSP(
+            key: 'user', value: user.toRawJson());
+        currentUser = user;
+        isLoginSuccessful = true;
+        // print(isLoginSuccessful);
+      }
     } else {
       isLoginSuccessful = false;
     }
+    print(isLoginSuccessful);
     return isLoginSuccessful;
   }
 }

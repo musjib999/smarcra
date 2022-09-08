@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:smarcra/module/auth/login.dart';
+import 'package:smarcra/module/screens/splash_screen.dart';
 import 'package:smarcra/shared/themes/light_theme.dart';
 
 void main() {
@@ -17,8 +17,9 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: 'Smarcra',
         theme: appLightTheme,
-        home: const Login(),
+        home: const SplashScreen(),
       );
-    });
+    },
+    );
   }
 }
