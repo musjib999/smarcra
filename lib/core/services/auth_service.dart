@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:smarcra/core/errors/request_error.dart';
 import 'package:smarcra/core/service_injector.dart';
 import 'package:smarcra/data/api_data.dart';
 import 'package:smarcra/data/local_data.dart';
@@ -124,16 +122,22 @@ class AuthService {
     if (requestedToken!.accessToken != '' &&
         requestedToken.expiresIn != 0 &&
         requestedToken.refreshToken != '') {
-      await localData.addStringToSP(
-          key: 'token', value: requestedToken.toRawJson());
+      if(rememberMe == true){
+        await localData.addStringToSP(
+            key: 'token', value: requestedToken.toRawJson(),
+        );
+      }
       token = requestedToken;
       final user = await getUser(token: requestedToken.accessToken);
 
       if (user!.firstName == '' && user.email == '' && user.resourceId == 0) {
         isLoginSuccessful = false;
       } else {
-        await localData.addStringToSP(
-            key: 'user', value: user.toRawJson());
+        if(rememberMe == true){
+          await localData.addStringToSP(
+            key: 'user', value: user.toRawJson(),
+          );
+        }
         currentUser = user;
         isLoginSuccessful = true;
         // print(isLoginSuccessful);
@@ -141,7 +145,6 @@ class AuthService {
     } else {
       isLoginSuccessful = false;
     }
-    print(isLoginSuccessful);
     return isLoginSuccessful;
   }
 }
