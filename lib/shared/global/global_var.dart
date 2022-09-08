@@ -7,6 +7,7 @@ import 'package:smarcra/shared/models/user_model.dart';
 
 late TokenModel token;
 late UserModel currentUser;
+bool rememberMe = false;
 
 
 List<Widget> appBottomNavScreens = [
