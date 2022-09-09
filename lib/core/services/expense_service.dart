@@ -39,6 +39,7 @@ class ExpenseService {
       {required BuildContext context,
       required double amount,
       required DateTime date,
+        required int type,
       required String file}) async {
     AddedExpenseModel? expense;
     final response = await apiData.postRequest(
@@ -54,7 +55,7 @@ class ExpenseService {
         'countryId': 630,
         'description': '',
         'expenseDate': '${date.year}-${date.month}-${date.day}',
-        'expenseTypeId': 5,
+        'expenseTypeId': type,
         'missionId': null,
         'month': date.month,
         'resourceId': currentUser.resourceId,

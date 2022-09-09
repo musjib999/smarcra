@@ -23,6 +23,7 @@ class AddExpense extends StatefulWidget {
 class _AddExpenseState extends State<AddExpense> {
   TextEditingController amount = TextEditingController();
   String selectedDocument = '';
+  int selectedType = 0;
   DateTime? selectedDate;
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class _AddExpenseState extends State<AddExpense> {
                         : '${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}'),
               ),
               SizedBox(height: 10.sp),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<dynamic>(
                 decoration: const InputDecoration(
                   hintText: 'Expense Type',
                   hintStyle: TextStyle(
@@ -80,13 +81,13 @@ class _AddExpenseState extends State<AddExpense> {
                     ),
                   ),
                 ),
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Hostel Fee',
-                    child: Text('Hostel Fee'),
-                  )
-                ],
-                onChanged: (value) {},
+                items: si.utilityService.getDropdownItems([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+                onChanged: (value) {
+                  setState(() {
+                    selectedType = value;
+                    print(selectedType);
+                  });
+                },
               ),
               SizedBox(height: 8.sp),
               InkWell(
@@ -136,6 +137,7 @@ class _AddExpenseState extends State<AddExpense> {
                               context: context,
                               amount: double.parse(amount.text),
                               date: selectedDate!,
+                              type: selectedType,
                               file: base64Encode(file),
                             );
                            if(expense == null){
