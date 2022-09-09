@@ -4,3 +4,4 @@ export 'auth_service.dart';
 export 'timesheet_service.dart';
 export 'leave_service.dart';
 export 'expense_service.dart';
+export 'utility_service.dart';

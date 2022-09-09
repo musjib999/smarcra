@@ -7,6 +7,7 @@ class ServiceInjector{
   TimeSheetService timeSheetService = TimeSheetService();
   LeaveService leaveService = LeaveService();
   ExpenseService expenseService = ExpenseService();
+  UtilityService utilityService = UtilityService();
 }
 
 ServiceInjector si = ServiceInjector();
